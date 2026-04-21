@@ -1,0 +1,23 @@
+# Build output
+factorio-server-manager
+factorio-server-manager.exe
+dist/
+
+# Go
+*.test
+*.out
+coverage.html
+
+# GoReleaser
+/dist/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
