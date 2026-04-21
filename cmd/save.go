@@ -20,7 +20,7 @@ var saveCmd = &cobra.Command{
 var saveListCmd = &cobra.Command{
 	Use:   "list <server>",
 	Short: "List save files for a server",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		savesDir := cfgManager.SavesDir(args[0])
 		entries, err := os.ReadDir(savesDir)
@@ -53,7 +53,7 @@ var saveListCmd = &cobra.Command{
 var saveCopyCmd = &cobra.Command{
 	Use:   "copy <file> <server>",
 	Short: "Copy a save file into a server's saves directory",
-	Args:  cobra.ExactArgs(2),
+	Args:  exactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		src := args[0]
 		serverName := args[1]
@@ -80,7 +80,7 @@ var saveExportFlags struct {
 var saveExportCmd = &cobra.Command{
 	Use:   "export <server> <save-file>",
 	Short: "Export a save file from a server to a local path",
-	Args:  cobra.ExactArgs(2),
+	Args:  exactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		serverName := args[0]
 		saveFile := args[1]
@@ -109,7 +109,7 @@ var saveExportCmd = &cobra.Command{
 var saveDeleteCmd = &cobra.Command{
 	Use:   "delete <server> <save-file>",
 	Short: "Delete a save file from a server",
-	Args:  cobra.ExactArgs(2),
+	Args:  exactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		serverName := args[0]
 		saveFile := args[1]

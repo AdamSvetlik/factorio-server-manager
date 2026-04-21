@@ -9,6 +9,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	ansiRed   = "\033[31m"
+	ansiReset = "\033[0m"
+)
+
+// exactArgs is like cobra.ExactArgs but also prints the command help when the
+// argument count is wrong, so the user sees usage alongside the error.
+func exactArgs(n int) cobra.PositionalArgs {
+	return func(cmd *cobra.Command, args []string) error {
+		if err := cobra.ExactArgs(n)(cmd, args); err != nil {
+			cmd.Help() //nolint:errcheck
+			fmt.Fprintln(os.Stderr)
+			return err
+		}
+		return nil
+	}
+}
+
 var (
 	dataDirFlag string
 	cfgManager  *config.Manager
@@ -21,7 +39,8 @@ var rootCmd = &cobra.Command{
 server instances running in Docker containers (factoriotools/factorio image).
 
 It handles server lifecycle, saves, mods, and configuration from a single tool.`,
-	SilenceUsage: true,
+	SilenceUsage:  true,
+	SilenceErrors: true,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		mgr := config.NewManager(dataDirFlag)
 		if err := mgr.Init(); err != nil {
@@ -35,6 +54,7 @@ It handles server lifecycle, saves, mods, and configuration from a single tool.`
 // Execute is the entrypoint called from main.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
+		fmt.Fprintf(os.Stderr, "%sError: %s%s\n", ansiRed, err.Error(), ansiReset)
 		os.Exit(1)
 	}
 }

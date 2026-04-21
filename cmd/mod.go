@@ -20,7 +20,7 @@ var modCmd = &cobra.Command{
 var modListCmd = &cobra.Command{
 	Use:   "list <server>",
 	Short: "List installed mods for a server",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		serverName := args[0]
 		if _, err := cfgManager.GetServer(serverName); err != nil {
@@ -57,7 +57,7 @@ var modSearchFlags struct {
 var modSearchCmd = &cobra.Command{
 	Use:   "search <query>",
 	Short: "Search the Factorio mod portal",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client := newModClient()
 		result, err := client.Search(args[0], modSearchFlags.page, modSearchFlags.pageSize)
@@ -92,7 +92,7 @@ var modSearchCmd = &cobra.Command{
 var modInfoCmd = &cobra.Command{
 	Use:   "info <mod-name>",
 	Short: "Show details about a mod from the mod portal",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client := newModClient()
 		info, err := client.GetMod(args[0])
@@ -131,7 +131,7 @@ var modInstallFlags struct {
 var modInstallCmd = &cobra.Command{
 	Use:   "install <server> <mod-name>",
 	Short: "Download and install a mod from the mod portal",
-	Args:  cobra.ExactArgs(2),
+	Args:  exactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		serverName := args[0]
 		modName := args[1]
@@ -180,7 +180,7 @@ var modInstallCmd = &cobra.Command{
 var modRemoveCmd = &cobra.Command{
 	Use:   "remove <server> <mod-file>",
 	Short: "Remove a mod file from a server",
-	Args:  cobra.ExactArgs(2),
+	Args:  exactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		serverName := args[0]
 		modFile := args[1]
@@ -203,7 +203,7 @@ var modRemoveCmd = &cobra.Command{
 var modUpdateCmd = &cobra.Command{
 	Use:   "update <server>",
 	Short: "Update all installed mods for a server to their latest versions",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		serverName := args[0]
 		if _, err := cfgManager.GetServer(serverName); err != nil {

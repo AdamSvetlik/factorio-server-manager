@@ -21,7 +21,7 @@ var configCmd = &cobra.Command{
 var configShowCmd = &cobra.Command{
 	Use:   "show <server>",
 	Short: "Print the server-settings.json for a server",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		settings, err := cfgManager.LoadServerSettings(args[0])
 		if err != nil {
@@ -44,7 +44,7 @@ Examples:
   factorio-server-manager config set myserver name "My Factorio Server"
   factorio-server-manager config set myserver max_players 10
   factorio-server-manager config set myserver require_user_verification true`,
-	Args: cobra.ExactArgs(3),
+	Args: exactArgs(3),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		serverName := args[0]
 		key := args[1]
@@ -79,7 +79,7 @@ Examples:
 var configEditCmd = &cobra.Command{
 	Use:   "edit <server>",
 	Short: "Open server-settings.json in your $EDITOR",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		serverName := args[0]
 		if _, err := cfgManager.GetServer(serverName); err != nil {

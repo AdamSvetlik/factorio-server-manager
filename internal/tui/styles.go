@@ -39,8 +39,7 @@ var (
 
 	// Help bar
 	HelpStyle = lipgloss.NewStyle().
-			Foreground(colorMuted).
-			MarginTop(1)
+			Foreground(colorMuted)
 
 	// Key hint
 	KeyStyle = lipgloss.NewStyle().

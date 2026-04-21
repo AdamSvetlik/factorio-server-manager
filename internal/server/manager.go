@@ -204,12 +204,13 @@ func (m *Manager) List(ctx context.Context) ([]*ServerInfo, error) {
 }
 
 // Logs streams logs for a server to the given writer.
-func (m *Manager) Logs(ctx context.Context, name string, follow bool, out io.Writer) error {
+// lines controls how many tail lines to return (0 means all).
+func (m *Manager) Logs(ctx context.Context, name string, follow bool, lines int, out io.Writer) error {
 	srv, err := m.cfg.GetServer(name)
 	if err != nil {
 		return err
 	}
-	return m.docker.StreamLogs(ctx, srv.ContainerID, follow, out)
+	return m.docker.StreamLogs(ctx, srv.ContainerID, follow, lines, out)
 }
 
 // Update pulls the latest version of the server's image and recreates the container.

@@ -31,7 +31,7 @@ var serverCreateFlags struct {
 var serverCreateCmd = &cobra.Command{
 	Use:   "create <name>",
 	Short: "Create a new Factorio server instance",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		mgr, err := newServerManager()
 		if err != nil {
@@ -106,7 +106,7 @@ var serverListCmd = &cobra.Command{
 var serverStartCmd = &cobra.Command{
 	Use:   "start <name>",
 	Short: "Start a Factorio server",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		mgr, err := newServerManager()
 		if err != nil {
@@ -125,7 +125,7 @@ var serverStartCmd = &cobra.Command{
 var serverStopCmd = &cobra.Command{
 	Use:   "stop <name>",
 	Short: "Stop a Factorio server",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		mgr, err := newServerManager()
 		if err != nil {
@@ -144,7 +144,7 @@ var serverStopCmd = &cobra.Command{
 var serverStatusCmd = &cobra.Command{
 	Use:   "status <name>",
 	Short: "Show detailed status of a Factorio server",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		mgr, err := newServerManager()
 		if err != nil {
@@ -180,7 +180,7 @@ var serverDeleteFlags struct {
 var serverDeleteCmd = &cobra.Command{
 	Use:   "delete <name>",
 	Short: "Delete a Factorio server (stops and removes container)",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
 		if !serverDeleteFlags.force {
@@ -213,18 +213,19 @@ var serverDeleteCmd = &cobra.Command{
 
 var serverLogsFlags struct {
 	follow bool
+	lines  int
 }
 
 var serverLogsCmd = &cobra.Command{
 	Use:   "logs <name>",
 	Short: "Show logs for a Factorio server",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		mgr, err := newServerManager()
 		if err != nil {
 			return err
 		}
-		return mgr.Logs(context.Background(), args[0], serverLogsFlags.follow, os.Stdout)
+		return mgr.Logs(context.Background(), args[0], serverLogsFlags.follow, serverLogsFlags.lines, os.Stdout)
 	},
 }
 
@@ -233,7 +234,7 @@ var serverLogsCmd = &cobra.Command{
 var serverUpdateCmd = &cobra.Command{
 	Use:   "update <name>",
 	Short: "Pull the latest image and recreate the server container",
-	Args:  cobra.ExactArgs(1),
+	Args:  exactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		mgr, err := newServerManager()
 		if err != nil {
@@ -252,7 +253,7 @@ var serverUpdateCmd = &cobra.Command{
 var serverRconCmd = &cobra.Command{
 	Use:   "rcon <server> <command>",
 	Short: "Execute an RCON command on a running Factorio server",
-	Args:  cobra.ExactArgs(2),
+	Args:  exactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		srv, err := cfgManager.GetServer(args[0])
 		if err != nil {
@@ -317,6 +318,7 @@ func init() {
 
 	// logs flags
 	serverLogsCmd.Flags().BoolVarP(&serverLogsFlags.follow, "follow", "f", false, "Follow log output")
+	serverLogsCmd.Flags().IntVarP(&serverLogsFlags.lines, "lines", "n", 100, "Number of lines to show from the end of the logs")
 
 	// assemble subcommands
 	serverCmd.AddCommand(serverCreateCmd)

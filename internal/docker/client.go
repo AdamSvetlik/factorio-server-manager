@@ -155,13 +155,18 @@ func (c *Client) ContainerExists(ctx context.Context, name string) (bool, string
 }
 
 // StreamLogs streams container logs to the given writer.
-func (c *Client) StreamLogs(ctx context.Context, containerID string, follow bool, out io.Writer) error {
+// lines controls how many tail lines to return (0 means all).
+func (c *Client) StreamLogs(ctx context.Context, containerID string, follow bool, lines int, out io.Writer) error {
+	tail := "all"
+	if lines > 0 {
+		tail = fmt.Sprintf("%d", lines)
+	}
 	logs, err := c.cli.ContainerLogs(ctx, containerID, container.LogsOptions{
 		ShowStdout: true,
 		ShowStderr: true,
 		Follow:     follow,
 		Timestamps: false,
-		Tail:       "100",
+		Tail:       tail,
 	})
 	if err != nil {
 		return fmt.Errorf("get logs: %w", err)
